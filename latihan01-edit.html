@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Json Edit Data</title>
+</head>
+<body>
+    <div>
+        Nama 
+        <input type="text" name="" id="nama">
+    </div>
+   
+    <div>
+        Email
+        <input type="text" name="" id="email">
+    </div>
+
+    <div>
+        User name
+        <input type="text" name="" id="username">
+    </div>
+    <div></div>
+        Password
+        <input type="password" id="pass1">
+    </div>
+    <div>
+        verifikasi Password
+        <input type="password" id="pass2">
+    </div>
+    <div>
+        <button type="Button" id="cmdupdate" onclick="UpdateData()">Update</button>
+    </div>
+
+
+    
+    <script>
+        const qstring = window.location.search;
+
+        const pr = new URLSearchParams(qstring);
+        let prid = pr.get('id');
+
+        const jsHTTP = new XMLHttpRequest();
+        let cx = "https://webpro.ptov.my.id/api/curduser.php?aksi=get&q="+prid;
+
+        
+        jsHTTP.open("GET",cx);
+        jsHTTP.send();
+        jsHTTP.onload = function(){
+            const dta = JSON.parse(this.responseText);
+            document.getElementById("nama").value = dta.isi[0][0];
+            document.getElementById("email").value = dta.isi[0][1];
+            document.getElementById("username").value = dta.isi[0][2];
+        }
+
+        function UpdateData(){
+           let nm = document.getElementById("nama").value;
+           let ema = document.getElementById("email").value;
+           let usr = document.getElementById("username").value;
+           let p1 = document.getElementById("pass1").value;
+           let p2 = document.getElementById("pass2").value;
+           let params = "nama"+nm+"&email="+ema+"&username="+usr+"&pass1"+p1+"&pass2"+p2+"&iduser="+prid;
+           let cx = "https://webpro.ptov.my.id/api/curduser.php?aksi=get&q=update";
+           const jsHTTP = new XMLHttpRequest();
+           jsHTTP.open("POST",cx,true);
+           jsHTTP.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+           jsHTTP.send(params);
+
+           jsHTTP.onload = function(){
+                const data = JSON.parse(this.responseText);
+                console.log(data);
+           }
+            alert("Tombol Update Data Klik");
+        }
+
+    </script>
+</body>
+</html>
